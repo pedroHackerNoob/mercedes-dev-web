@@ -6,6 +6,16 @@ class City(Base):
     id_city = Column('id_city', Integer, primary_key=True)  # Maps 'id' to 'city_id' column
     name = Column('name',String(60))
 
+    def save(self):
+        session = SessionLocal()
+        try:
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self.id_city
+        finally:
+            session.close()
+
 def get_all():
     session = SessionLocal()
     try:
