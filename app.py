@@ -21,6 +21,12 @@ def post_cities():
     print(id)
     succes = id is not None
     return jsonify(succes), 201
-
+@app.put('/cities/<int:id>')
+def put_cities(id):
+    print('put from /cities')
+    data = request.get_json()
+    c = City(id_city=id, name=data['name'])
+    c.poster_city()
+    return jsonify(True), 201
 if __name__ == '__main__':
     app.run()

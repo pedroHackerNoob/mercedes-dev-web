@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.exc import SQLAlchemyError
+
 from persistence.db import Base, SessionLocal
 
 class City(Base):
@@ -13,6 +15,23 @@ class City(Base):
             session.commit()
             session.refresh(self)
             return self.id_city
+        finally:
+            session.close()
+
+    def poster_city(self):
+        session = SessionLocal()
+        try:
+            city = session.query(City).filter(City.id_city == self.id_city).first()
+            if city:
+                city.name = self.name
+                session.commit()
+                return True
+            return False
+        except SQLAlchemyError as e:
+            print("error: \n\n\n"+str(e))
+            session.rollback()
+            return False
+
         finally:
             session.close()
 
