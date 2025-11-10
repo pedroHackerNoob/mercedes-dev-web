@@ -11,7 +11,7 @@ def get_cities():  # put application's code here
     print('get from /cities')
     for c in cities:
         print(c.name)
-    return jsonify([c.name for c in cities])
+    return jsonify([c.name for c in cities]),200
 @app.post('/cities')
 def post_cities():
     data = request.get_json()
