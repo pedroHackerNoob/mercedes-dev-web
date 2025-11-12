@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 
-from entities.city import get_all, City
+from entities.city import get_all_city, City
+from entities.customer import get_all_customer
 
 app = Flask(__name__)
 
 
 @app.route('/cities')
 def get_cities():  # put application's code here
-    cities = get_all()
+    cities = get_all_city()
     print('get from /cities')
     for c in cities:
         print(c.name)
@@ -32,6 +33,14 @@ def delete_city(id):
     c = City(id_city=id)
     c.delete_city()
     return jsonify(True), 200
+@app.route('/customer')
+def get_customer():
+    print('get from /customer')
+    customer = get_all_customer()
+    for c in customer:
+        print(c.name)
+
+    return jsonify([c.name for c in customer]),200
 
 if __name__ == '__main__':
     app.run()

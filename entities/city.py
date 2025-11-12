@@ -47,7 +47,7 @@ class City(Base):
             return False
         finally:
             session.close()
-def get_all():
+def get_all_city():
     session = SessionLocal()
     try:
         return session.query(City).all()
