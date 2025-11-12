@@ -35,6 +35,18 @@ class City(Base):
         finally:
             session.close()
 
+    def delete_city(self):
+        session = SessionLocal()
+        try:
+            city = session.query(City).filter(City.id_city == self.id_city).first()
+            session.delete(city)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            print("error: \n\n\n"+str(e))
+            return False
+        finally:
+            session.close()
 def get_all():
     session = SessionLocal()
     try:
