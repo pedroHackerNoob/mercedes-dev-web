@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 
 from entities.city import get_all_city, City
-from entities.customer import get_all_customer
+from entities.customer import get_all_customer, Customer
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def get_cities():  # put application's code here
 def post_city():
     data = request.get_json()
     c = City(name=data['name'])
-    id = c.save()
+    id = c.post_city()
     print(id)
     succes = id is not None
     return jsonify(succes), 201
@@ -26,7 +26,7 @@ def put_city(id):
     print('put from /cities')
     data = request.get_json()
     c = City(id_city=id, name=data['name'])
-    c.poster_city()
+    c.put_city()
     return jsonify(True), 201
 @app.delete('/cities/<int:id>')
 def delete_city(id):
@@ -39,8 +39,15 @@ def get_customer():
     customer = get_all_customer()
     for c in customer:
         print(c.name)
-
     return jsonify([c.name for c in customer]),200
+@app.post('/customer')
+def post_customer():
+    data = request.get_json()
+    c = Customer(name=data['name'],email=data['email'],phone=data['phone'],zip=data['zip'])
+    id = c.post_customer()
+    print(id)
+    succes = id is not None
+    return jsonify(succes), 201
 
 if __name__ == '__main__':
     app.run()
