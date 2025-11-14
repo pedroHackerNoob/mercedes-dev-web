@@ -30,6 +30,8 @@ class Customer(Base):
                 customer.phone = self.phone
                 customer.zip = self.zip
                 session.commit()
+                return True
+            return False
         except SQLAlchemyError as e:
             print("error: \n\n\n"+str(e))
             return False
