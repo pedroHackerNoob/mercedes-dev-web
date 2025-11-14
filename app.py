@@ -48,6 +48,12 @@ def post_customer():
     print(id)
     succes = id is not None
     return jsonify(succes), 201
-
+@app.put('/customer/<int:id>')
+def put_customer(id):
+    print('put from /customer')
+    data = request.get_json()
+    c = Customer(id_customer=id, name=data['name'],email=data['email'],phone=data['phone'],zip=data['zip'])
+    c.put_customer()
+    return jsonify(True), 201
 if __name__ == '__main__':
     app.run()
