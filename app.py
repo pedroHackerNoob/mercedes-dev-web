@@ -55,5 +55,11 @@ def put_customer(id):
     c = Customer(id_customer=id, name=data['name'],email=data['email'],phone=data['phone'],zip=data['zip'])
     c.put_customer()
     return jsonify(True), 201
+@app.delete('/customer/<int:id>')
+def delete_customer(id):
+    print('delete from /customer')
+    c = Customer(id_customer=id)
+    c.delete_customer()
+    return jsonify(True), 200
 if __name__ == '__main__':
     app.run()

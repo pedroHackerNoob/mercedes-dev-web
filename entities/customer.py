@@ -37,6 +37,19 @@ class Customer(Base):
             return False
         finally:
             session.close()
+    def delete_customer(self):
+        session = SessionLocal()
+        try:
+            customer = session.query(Customer).filter(Customer.id_customer == self.id_customer).first()
+            if customer:
+                session.delete(customer)
+                session.commit()
+                return True
+            return False
+        except SQLAlchemyError as e:
+            print("error: \n\n\n"+str(e))
+        finally:
+            session.close()
 def get_all_customer():
     session = SessionLocal()
     try:
