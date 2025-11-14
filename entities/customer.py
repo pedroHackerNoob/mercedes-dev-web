@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer
+from sqlalchemy.exc import SQLAlchemyError
 
 from persistence.db import Base, SessionLocal
 
@@ -10,7 +11,7 @@ class Customer(Base):
     phone = Column('phone',String(20))
     zip= Column('zip',String(10))
 
-    def save_customer(self):
+    def post_customer(self):
         session = SessionLocal()
         try:
             session.add(self)
@@ -19,7 +20,21 @@ class Customer(Base):
             return self.id_customer
         finally:
             session.close()
-
+    def put_customer(self):
+        session = SessionLocal()
+        try:
+            customer = session.query(Customer).filter(Customer.id_customer == self.id_customer).first()
+            if customer:
+                customer.name = self.name
+                customer.email = self.email
+                customer.phone = self.phone
+                customer.zip = self.zip
+                session.commit()
+        except SQLAlchemyError as e:
+            print("error: \n\n\n"+str(e))
+            return False
+        finally:
+            session.close()
 def get_all_customer():
     session = SessionLocal()
     try:
