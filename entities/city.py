@@ -8,7 +8,7 @@ class City(Base):
     id_city = Column('id_city', Integer, primary_key=True)  # Maps 'id' to 'city_id' column
     name = Column('name',String(60))
 
-    def save(self):
+    def post_city(self):
         session = SessionLocal()
         try:
             session.add(self)
@@ -17,8 +17,7 @@ class City(Base):
             return self.id_city
         finally:
             session.close()
-
-    def poster_city(self):
+    def put_city(self):
         session = SessionLocal()
         try:
             city = session.query(City).filter(City.id_city == self.id_city).first()
@@ -34,7 +33,6 @@ class City(Base):
 
         finally:
             session.close()
-
     def delete_city(self):
         session = SessionLocal()
         try:
