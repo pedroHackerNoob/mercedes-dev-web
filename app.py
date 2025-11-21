@@ -1,66 +1,78 @@
-from flask import Flask, render_template, request, jsonify
-
-from entities.city import get_all_city, City
-from entities.customer import get_all_customer, Customer
+from flask import Flask, request, jsonify
+from persistence.db import engine, Base, SessionLocal
+# Importamos tus modelos
+from entities.models import User, Category, Thread, Comment
 
 app = Flask(__name__)
-@app.route('/')
-def index():
-    return render_template('index.html')
-@app.route('/cities')
-def get_cities():  # put application's code here
-    cities = get_all_city()
-    print('get from /cities')
-    for c in cities:
-        print(c.name)
-    return jsonify([c.name for c in cities]),200
-@app.post('/cities')
-def post_city():
+
+# CREAR TABLAS (Solo si no existen)
+Base.metadata.create_all(bind=engine)
+
+
+# --- UTILIDAD PARA LA DB ---
+def get_db():
+    db = SessionLocal()
+    try:
+        return db
+    finally:
+        # No cerramos aquí para poder usarla en la función,
+        # pero idealmente se maneja con dependencias.
+        # Para este ejemplo simple, cerraremos manual en la ruta.
+        pass
+
+
+# --- RUTA 1: CREAR CATEGORÍA (POST) ---
+# Necesitamos esto primero: "Memes", "Informática", etc.
+@app.route('/categories', methods=['POST'])
+def create_category():
+    data = request.get_json()  # Recibe el JSON del cliente
+
+    # Validamos que envíen el nombre
+    if not 'name' in data:
+        return jsonify({"error": "El nombre es obligatorio"}), 400
+
+    db = SessionLocal()
+    try:
+        # Creamos la entidad
+        new_cat = Category(name=data['name'])
+        db.add(new_cat)
+        db.commit()
+        db.refresh(new_cat)  # Recargamos para obtener el ID generado
+        return jsonify({"id": new_cat.id, "name": new_cat.name, "message": "Categoría creada!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+
+# --- RUTA 2: CREAR USUARIO (POST) ---
+@app.route('/users', methods=['POST'])
+def create_user():
     data = request.get_json()
-    c = City(name=data['name'])
-    id = c.post_city()
-    print(id)
-    succes = id is not None
-    return jsonify(succes), 201
-@app.put('/cities/<int:id>')
-def put_city(id):
-    print('put from /cities')
-    data = request.get_json()
-    c = City(id_city=id, name=data['name'])
-    c.put_city()
-    return jsonify(True), 201
-@app.delete('/cities/<int:id>')
-def delete_city(id):
-    c = City(id_city=id)
-    c.delete_city()
-    return jsonify(True), 200
-@app.route('/customer')
-def get_customer():
-    print('get from /customer')
-    customer = get_all_customer()
-    for c in customer:
-        print(c.name)
-    return jsonify([c.name for c in customer]),200
-@app.post('/customer')
-def post_customer():
-    data = request.get_json()
-    c = Customer(name=data['name'],email=data['email'],phone=data['phone'],zip=data['zip'])
-    id = c.post_customer()
-    print(id)
-    succes = id is not None
-    return jsonify(succes), 201
-@app.put('/customer/<int:id>')
-def put_customer(id):
-    print('put from /customer')
-    data = request.get_json()
-    c = Customer(id_customer=id, name=data['name'],email=data['email'],phone=data['phone'],zip=data['zip'])
-    c.put_customer()
-    return jsonify(True), 201
-@app.delete('/customer/<int:id>')
-def delete_customer(id):
-    print('delete from /customer')
-    c = Customer(id_customer=id)
-    c.delete_customer()
-    return jsonify(True), 200
+
+    db = SessionLocal()
+    try:
+        new_user = User(username=data['username'], email=data['email'])
+        db.add(new_user)
+        db.commit()
+        return jsonify({"message": f"Usuario {new_user.username} creado con éxito!"}), 201
+    except Exception as e:
+        return jsonify({"error": "Error creando usuario (quizás el email ya existe)"}), 400
+    finally:
+        db.close()
+
+
+# --- RUTA 3: VER TODOS LOS USUARIOS (GET) ---
+@app.route('/users', methods=['GET'])
+def get_users():
+    db = SessionLocal()
+    users = db.query(User).all()
+    db.close()
+
+    # Convertimos la lista de objetos a JSON
+    result = [{"id": u.id, "username": u.username} for u in users]
+    return jsonify(result)
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
