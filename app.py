@@ -76,5 +76,74 @@ def get_users():
     return jsonify(result)
 
 
+# --- RUTA 4: PUBLICAR UN HILO (THREAD) ---
+@app.route('/threads', methods=['POST'])
+def create_thread():
+    data = request.get_json()
+    # Validamos datos mínimos
+    if not all(k in data for k in ("title", "content", "user_id", "category_id")):
+        return jsonify({"error": "Faltan datos (title, content, user_id, category_id)"}), 400
+
+    db = SessionLocal()
+    try:
+        # Creamos el hilo
+        new_thread = Thread(
+            title=data['title'],
+            content=data['content'],
+            user_id=data['user_id'],
+            category_id=data['category_id']
+        )
+        db.add(new_thread)
+        db.commit()
+        return jsonify({"message": "Hilo publicado con éxito!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    finally:
+        db.close()
+
+
+# --- RUTA 5: COMENTAR UN HILO ---
+@app.route('/comments', methods=['POST'])
+def create_comment():
+    data = request.get_json()
+    if not all(k in data for k in ("content", "user_id", "thread_id")):
+        return jsonify({"error": "Faltan datos (content, user_id, thread_id)"}), 400
+
+    db = SessionLocal()
+    try:
+        new_comment = Comment(
+            content=data['content'],
+            user_id=data['user_id'],
+            thread_id=data['thread_id']
+        )
+        db.add(new_comment)
+        db.commit()
+        return jsonify({"message": "Comentario agregado!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    finally:
+        db.close()
+
+
+# --- RUTA 6: VER HILOS CON SUS COMENTARIOS (EL FEED) ---
+@app.route('/feed', methods=['GET'])
+def get_feed():
+    db = SessionLocal()
+    # Traemos todos los hilos
+    threads = db.query(Thread).all()
+
+    # Armamos un JSON complejo (Hilo + Autor + Categoría + Comentarios)
+    results = []
+    for t in threads:
+        results.append({
+            "id": t.id,
+            "title": t.title,
+            "content": t.content,
+            "author": t.author.username,
+            "category": t.category.name,
+            "comments": [{"author": c.author.username, "content": c.content} for c in t.comments]
+        })
+    db.close()
+    return jsonify(results)
 if __name__ == '__main__':
     app.run(debug=True)
