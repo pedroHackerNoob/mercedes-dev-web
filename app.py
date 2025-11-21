@@ -5,7 +5,7 @@ from entities.customer import get_all_customer, Customer
 
 app = Flask(__name__)
 @app.route('/')
-def hello_world():
+def index():
     return render_template('index.html')
 @app.route('/cities')
 def get_cities():  # put application's code here
