@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from persistence.db import engine, Base, SessionLocal
 # Importamos tus modelos
 from entities.models import User, Category, Thread, Comment
@@ -19,10 +19,12 @@ def get_db():
         # pero idealmente se maneja con dependencias.
         # Para este ejemplo simple, cerraremos manual en la ruta.
         pass
-
+# ---Ruta 0: test (GET) ---
+@app.route('/')
+def hello_world():
+    return render_template('index.html')
 
 # --- RUTA 1: CREAR CATEGORÍA (POST) ---
-# Necesitamos esto primero: "Memes", "Informática", etc.
 @app.route('/categories', methods=['POST'])
 def create_category():
     data = request.get_json()  # Recibe el JSON del cliente
