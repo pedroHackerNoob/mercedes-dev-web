@@ -20,10 +20,14 @@ def get_db():
         # pero idealmente se maneja con dependencias.
         # Para este ejemplo simple, cerraremos manual en la ruta.
         pass
+
+
 # ---Ruta 0: test (GET) ---
 @app.route('/')
 def hello_world():
     return render_template('signUp.html')
+
+
 
 # --- RUTA 1: CREAR CATEGORÍA (POST) ---
 @app.route('/categories', methods=['POST'])
@@ -260,6 +264,8 @@ def delete_user(user_id):
         return jsonify({"error": "No se puede borrar el usuario porque tiene hilos o comentarios activos."}), 400
     finally:
         db.close()
+
+
 # --- VER TODAS LAS CATEGORÍAS (GET) ---
 @app.route('/categories', methods=['GET'])
 def get_categories():
@@ -292,5 +298,7 @@ def login():
             return jsonify({"error": "Contraseña incorrecta"}), 401
     finally:
         db.close()
+
+
 if __name__ == '__main__':
     app.run(debug=True)
