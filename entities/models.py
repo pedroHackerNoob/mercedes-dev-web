@@ -21,6 +21,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(80), nullable=False, unique=True)
     email = Column(String(120), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
 
     # Relaciones
     threads = relationship('Thread', back_populates='author')
