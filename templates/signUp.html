@@ -1,0 +1,40 @@
+{% include 'header.html' %}
+<div class="container">
+  <div class="row justify-content-center mt-5">
+
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+
+      <div class="card shadow-lg p-4 p-md-5">
+        <h3 class="text-center mb-4">Crear Nueva Cuenta</h3>
+
+        <form>
+
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="inputEmail" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="inputUsername" class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" id="inputUsername" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="inputPassword" required>
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+             <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+          </div>
+
+        </form>
+
+        <div class="text-center mt-3">
+            <p class="text-muted mb-0">¿Ya tienes una cuenta? <a href="#" class="text-decoration-none">Inicia Sesión aquí</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
