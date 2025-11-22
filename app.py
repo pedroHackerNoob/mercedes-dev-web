@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify, render_template
 from persistence.db import engine, Base, SessionLocal
 # Importamos tus modelos
 from entities.models import User, Category, Thread, Comment
-
+# Herramientas de seguridad
+from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 # CREAR TABLAS (Solo si no existen)
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 
 # --- UTILIDAD PARA LA DB ---
@@ -52,14 +53,26 @@ def create_category():
 def create_user():
     data = request.get_json()
 
+    # Validamos que venga el password
+    if not 'password' in data:
+        return jsonify({"error": "La contraseña es obligatoria"}), 400
+
     db = SessionLocal()
     try:
-        new_user = User(username=data['username'], email=data['email'])
+        # ENCRIPTAMOS LA CONTRASEÑA ANTES DE GUARDAR
+        hashed_password = generate_password_hash(data['password'])
+
+        new_user = User(
+            username=data['username'],
+            email=data['email'],
+            password=hashed_password  # Guardamos el garabato seguro, no el texto plano
+        )
+
         db.add(new_user)
         db.commit()
-        return jsonify({"message": f"Usuario {new_user.username} creado con éxito!"}), 201
+        return jsonify({"message": f"Usuario {new_user.username} creado con seguridad!"}), 201
     except Exception as e:
-        return jsonify({"error": "Error creando usuario (quizás el email ya existe)"}), 400
+        return jsonify({"error": f"Error creando usuario: {str(e)}"}), 400
     finally:
         db.close()
 
@@ -254,5 +267,30 @@ def get_categories():
     cats = db.query(Category).all()
     db.close()
     return jsonify([{"id": c.id, "name": c.name} for c in cats])
+
+
+# --- RUTA LOGIN (Verificar contraseña) ---
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    db = SessionLocal()
+    try:
+        # Buscamos al usuario por nombre
+        user = db.query(User).filter(User.username == username).first()
+
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # VERIFICAMOS LA CONTRASEÑA
+        # check_password_hash(hash_guardado, contraseña_que_envian)
+        if check_password_hash(user.password, password):
+            return jsonify({"message": "Login Exitoso", "user_id": user.id}), 200
+        else:
+            return jsonify({"error": "Contraseña incorrecta"}), 401
+    finally:
+        db.close()
 if __name__ == '__main__':
     app.run(debug=True)
