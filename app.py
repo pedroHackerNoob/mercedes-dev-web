@@ -145,5 +145,114 @@ def get_feed():
         })
     db.close()
     return jsonify(results)
+
+
+# --- VER UN HILO ESPECÍFICO (GET) ---
+@app.route('/threads/<int:thread_id>', methods=['GET'])
+def get_single_thread(thread_id):
+    db = SessionLocal()
+    try:
+        thread = db.query(Thread).filter(Thread.id == thread_id).first()
+        if not thread:
+            return jsonify({"error": "Hilo no encontrado"}), 404
+
+        # Retornamos el hilo con sus detalles
+        return jsonify({
+            "id": thread.id,
+            "title": thread.title,
+            "content": thread.content,
+            "author": thread.author.username,
+            "category": thread.category.name
+        })
+    finally:
+        db.close()
+
+
+# --- BORRAR UN HILO (DELETE) ---
+@app.route('/threads/<int:thread_id>', methods=['DELETE'])
+def delete_thread(thread_id):
+    db = SessionLocal()
+    try:
+        thread = db.query(Thread).filter(Thread.id == thread_id).first()
+        if not thread:
+            return jsonify({"error": "Hilo no encontrado"}), 404
+
+        # OJO: Al borrar el hilo, se borrarán los comentarios si configuramos CASCADE
+        # Si no, primero deberíamos borrar los comentarios manualmente.
+        # Intentemos borrar directo:
+        db.delete(thread)
+        db.commit()
+        return jsonify({"message": "Hilo eliminado correctamente"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": f"No se pudo borrar: {str(e)}"}), 500
+    finally:
+        db.close()
+
+
+# --- BORRAR COMENTARIO (DELETE) ---
+@app.route('/comments/<int:comment_id>', methods=['DELETE'])
+def delete_comment(comment_id):
+    db = SessionLocal()
+    try:
+        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+        if not comment:
+            return jsonify({"error": "Comentario no encontrado"}), 404
+
+        db.delete(comment)
+        db.commit()
+        return jsonify({"message": "Comentario eliminado"}), 200
+    finally:
+        db.close()
+
+
+# --- ACTUALIZAR USUARIO (PUT) ---
+@app.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # Actualizamos solo lo que envíen
+        if 'username' in data:
+            user.username = data['username']
+        if 'email' in data:
+            user.email = data['email']
+
+        db.commit()
+        return jsonify({"message": "Usuario actualizado"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    finally:
+        db.close()
+
+
+# --- BORRAR USUARIO (DELETE) ---
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        db.delete(user)
+        db.commit()
+        return jsonify({"message": "Usuario eliminado. Adiós vaquero."}), 200
+    except Exception as e:
+        # Seguramente fallará si el usuario tiene posts (por integridad de la DB)
+        return jsonify({"error": "No se puede borrar el usuario porque tiene hilos o comentarios activos."}), 400
+    finally:
+        db.close()
+# --- VER TODAS LAS CATEGORÍAS (GET) ---
+@app.route('/categories', methods=['GET'])
+def get_categories():
+    db = SessionLocal()
+    cats = db.query(Category).all()
+    db.close()
+    return jsonify([{"id": c.id, "name": c.name} for c in cats])
 if __name__ == '__main__':
     app.run(debug=True)
