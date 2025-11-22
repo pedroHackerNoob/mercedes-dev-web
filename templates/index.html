@@ -16,14 +16,44 @@
 </head>
 
 <body>
-    <section class="container">
-        <h1>Sign In</h1>
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <input type="email" name="email" placeholder="Email">
-            <button type="submit">Sign In</button>
+    <div class="container">
+  <div class="row justify-content-center mt-15">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+
+      <div class="card shadow-lg p-4">
+        <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+        <form>
+
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+          </div>
+
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="inputPassword">
+          </div>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="checkRemember">
+            <label class="form-check-label" for="checkRemember">Recuérdame</label>
+          </div>
+
+          <div class="d-grid gap-2">
+             <button type="submit" class="btn btn-primary">Entrar</button>
+          </div>
+
         </form>
-    </section>
+
+        <div class="text-center mt-3">
+            <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
   <script src="../static/js/plugins.js"></script>
   <script src="../static/js/theme.js"></script>
 </body>
