@@ -29,7 +29,7 @@ def hello_world():
 
 
 
-# --- RUTA 1: CREAR CATEGORÍA (POST) ---
+# --- RUTA: CREAR CATEGORÍA (POST) ---
 @app.route('/categories', methods=['POST'])
 def create_category():
     data = request.get_json()  # Recibe el JSON del cliente
@@ -52,7 +52,7 @@ def create_category():
         db.close()
 
 
-# --- RUTA 2: CREAR USUARIO (POST) ---
+# --- RUTA: CREAR USUARIO (POST) ---
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
@@ -81,7 +81,7 @@ def create_user():
         db.close()
 
 
-# --- RUTA 3: VER TODOS LOS USUARIOS (GET) ---
+# --- RUTA: VER TODOS LOS USUARIOS (GET) ---
 @app.route('/users', methods=['GET'])
 def get_users():
     db = SessionLocal()
@@ -93,7 +93,7 @@ def get_users():
     return jsonify(result)
 
 
-# --- RUTA 4: PUBLICAR UN HILO (THREAD) ---
+# --- RUTA: PUBLICAR UN HILO (THREAD) ---
 @app.route('/threads', methods=['POST'])
 def create_thread():
     data = request.get_json()
@@ -119,7 +119,7 @@ def create_thread():
         db.close()
 
 
-# --- RUTA 5: COMENTAR UN HILO ---
+# --- RUTA: COMENTAR UN HILO ---
 @app.route('/comments', methods=['POST'])
 def create_comment():
     data = request.get_json()
@@ -142,7 +142,7 @@ def create_comment():
         db.close()
 
 
-# --- RUTA 6: VER HILOS CON SUS COMENTARIOS (EL FEED) ---
+# --- RUTA: VER HILOS CON SUS COMENTARIOS (EL FEED) ---
 @app.route('/feed', methods=['GET'])
 def get_feed():
     db = SessionLocal()
