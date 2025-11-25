@@ -24,9 +24,12 @@ def get_db():
 
 # ---Ruta 0: test (GET) ---
 @app.route('/')
-def hello_world():
-    return render_template('signUp.html')
+def logInTest():
+    return render_template('logIn.html')
 
+@app.route('/test')
+def signInTest():
+    return render_template('signUp.html')
 
 
 # --- RUTA: CREAR CATEGORÍA (POST) ---
