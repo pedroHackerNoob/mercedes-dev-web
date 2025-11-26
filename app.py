@@ -4,11 +4,30 @@ from persistence.db import engine, Base, SessionLocal
 from entities.models import User, Category, Thread, Comment
 # Herramientas de seguridad
 from werkzeug.security import generate_password_hash, check_password_hash
+# FLASK-LOGIN
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 app = Flask(__name__)
+
+# SECRET_KEY (Para firmar las cookies)
+app.config['SECRET_KEY'] = 'una_palabra_secreta_muy_dificil'
+
+#INICIALIZAR EL LOGIN MANAGER
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login' # A dónde redirigir si no está logueado
 
 # CREAR TABLAS (Solo si no existen)
 # Base.metadata.create_all(bind=engine)
 
+# 4. EL "USER LOADER" (Vital: Le dice a Flask cómo buscar al usuario por su ID en la cookie)
+@login_manager.user_loader
+def load_user(user_id):
+    db = SessionLocal()
+    try:
+        # Buscamos el usuario en la DB usando el ID que viene en la cookie
+        return db.query(User).get(int(user_id))
+    finally:
+        db.close()
 
 # --- UTILIDAD PARA LA DB ---
 def get_db():
@@ -24,16 +43,20 @@ def get_db():
 
 # ---Ruta 0: test (GET) ---
 @app.route('/')
-def logInTest():
-    return render_template('profileUser.html')
+def landingPage():
+    return render_template('landingPage.html')
 
-@app.route('/test')
-def signInTest():
-    return render_template('main.html')
+@app.route('/login')
+def loginPage():
+    return render_template('logIn.html')
+
+@app.route('/signup')
+def signupPage():
+    return render_template('signUp.html')
 
 
 # --- RUTA: CREAR CATEGORÍA (POST) ---
-@app.route('/categories', methods=['POST'])
+@app.route('/api/categories', methods=['POST'])
 def create_category():
     data = request.get_json()  # Recibe el JSON del cliente
 
@@ -56,7 +79,7 @@ def create_category():
 
 
 # --- RUTA: CREAR USUARIO (POST) ---
-@app.route('/users', methods=['POST'])
+@app.route('/api/users', methods=['POST'])
 def create_user():
     data = request.get_json()
 
@@ -85,7 +108,7 @@ def create_user():
 
 
 # --- RUTA: VER TODOS LOS USUARIOS (GET) ---
-@app.route('/users', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 def get_users():
     db = SessionLocal()
     users = db.query(User).all()
@@ -97,7 +120,7 @@ def get_users():
 
 
 # --- RUTA: PUBLICAR UN HILO (THREAD) ---
-@app.route('/threads', methods=['POST'])
+@app.route('/api/threads', methods=['POST'])
 def create_thread():
     data = request.get_json()
     # Validamos datos mínimos
@@ -123,7 +146,7 @@ def create_thread():
 
 
 # --- RUTA: COMENTAR UN HILO ---
-@app.route('/comments', methods=['POST'])
+@app.route('/api/comments', methods=['POST'])
 def create_comment():
     data = request.get_json()
     if not all(k in data for k in ("content", "user_id", "thread_id")):
@@ -146,7 +169,7 @@ def create_comment():
 
 
 # --- RUTA: VER HILOS CON SUS COMENTARIOS (EL FEED) ---
-@app.route('/feed', methods=['GET'])
+@app.route('/api/feed', methods=['GET'])
 def get_feed():
     db = SessionLocal()
     # Traemos todos los hilos
@@ -168,7 +191,7 @@ def get_feed():
 
 
 # --- VER UN HILO ESPECÍFICO (GET) ---
-@app.route('/threads/<int:thread_id>', methods=['GET'])
+@app.route('/api/threads/<int:thread_id>', methods=['GET'])
 def get_single_thread(thread_id):
     db = SessionLocal()
     try:
@@ -189,7 +212,7 @@ def get_single_thread(thread_id):
 
 
 # --- BORRAR UN HILO (DELETE) ---
-@app.route('/threads/<int:thread_id>', methods=['DELETE'])
+@app.route('/api/threads/<int:thread_id>', methods=['DELETE'])
 def delete_thread(thread_id):
     db = SessionLocal()
     try:
@@ -211,7 +234,7 @@ def delete_thread(thread_id):
 
 
 # --- BORRAR COMENTARIO (DELETE) ---
-@app.route('/comments/<int:comment_id>', methods=['DELETE'])
+@app.route('/api/comments/<int:comment_id>', methods=['DELETE'])
 def delete_comment(comment_id):
     db = SessionLocal()
     try:
@@ -227,7 +250,7 @@ def delete_comment(comment_id):
 
 
 # --- ACTUALIZAR USUARIO (PUT) ---
-@app.route('/users/<int:user_id>', methods=['PUT'])
+@app.route('/api/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json()
     db = SessionLocal()
@@ -251,7 +274,7 @@ def update_user(user_id):
 
 
 # --- BORRAR USUARIO (DELETE) ---
-@app.route('/users/<int:user_id>', methods=['DELETE'])
+@app.route('/api/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     db = SessionLocal()
     try:
@@ -270,7 +293,7 @@ def delete_user(user_id):
 
 
 # --- VER TODAS LAS CATEGORÍAS (GET) ---
-@app.route('/categories', methods=['GET'])
+@app.route('/api/categories', methods=['GET'])
 def get_categories():
     db = SessionLocal()
     cats = db.query(Category).all()
@@ -279,7 +302,7 @@ def get_categories():
 
 
 # --- RUTA LOGIN (Verificar contraseña) ---
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data.get('username')
@@ -287,21 +310,30 @@ def login():
 
     db = SessionLocal()
     try:
-        # Buscamos al usuario por nombre
         user = db.query(User).filter(User.username == username).first()
 
-        if not user:
-            return jsonify({"error": "Usuario no encontrado"}), 404
-
-        # VERIFICAMOS LA CONTRASEÑA
-        # check_password_hash(hash_guardado, contraseña_que_envian)
-        if check_password_hash(user.password, password):
-            return jsonify({"message": "Login Exitoso", "user_id": user.id}), 200
+        if user and check_password_hash(user.password, password):
+            # Esto crea la sesión y la cookie en el navegador
+            login_user(user)
+            return jsonify({"message": "Login Exitoso", "user": user.username}), 200
         else:
-            return jsonify({"error": "Contraseña incorrecta"}), 401
+            return jsonify({"error": "Credenciales inválidas"}), 401
     finally:
         db.close()
 
+
+# LOGOUT
+@app.route('/api/logout')
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message": "Sesión cerrada"}), 200
+
+@app.route('/profile')
+@login_required # <--- Esto protege la ruta. Si no estás logueado, te patea.
+def profile():
+    # No necesitamos consultar la DB, current_user ya tiene los datos
+    return render_template('profileUser.html', user=current_user)
 
 if __name__ == '__main__':
     app.run(debug=True)
