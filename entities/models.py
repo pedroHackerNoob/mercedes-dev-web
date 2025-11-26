@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from persistence.db import Base  # Importamos la Base de tu archivo db.py
 
+from flask_login import UserMixin
+
 # 1. ENTIDAD CATEGORY
 class Category(Base):
     __tablename__ = 'categories'
@@ -15,7 +17,7 @@ class Category(Base):
 
 
 # 2. ENTIDAD USER
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, index=True)
