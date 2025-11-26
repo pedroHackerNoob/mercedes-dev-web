@@ -1,0 +1,61 @@
+{% include 'headerUser.html' %}
+<div class="container mt-4">
+  <div class="row g-4">
+
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="sticky-top" style="top: 20px;">
+        <div class="card p-3 shadow-sm">
+          <h5 class="mb-3">Explorar</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-person-lines-fill me-2"></i> Amigos</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-calendar-event me-2"></i> Eventos</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-controller me-2"></i> Juegos</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-gear me-2"></i> Configuración</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+
+      <div class="card p-3 mb-4 shadow-sm">
+        <h5>¿Qué estás pensando, Usuario?</h5>
+        <textarea class="form-control mb-2" rows="2" placeholder="Escribe tu nueva publicación..."></textarea>
+        <button class="btn btn-primary btn-sm">Publicar</button>
+      </div>
+
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">UsuarioEjemplo <small class="text-muted ms-2">hace 5 min</small></h6>
+          <i class="bi bi-three-dots"></i>
+        </div>
+        <img src="placeholder-post-image.jpg" class="card-img-top" alt="Imagen de Publicación">
+        <div class="card-body">
+          <p class="card-text">¡Me encanta este nuevo diseño! La clave está en usar bien las clases de Bootstrap. #ResponsiveDesign</p>
+          <button class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-hand-thumbs-up"></i> Me gusta</button>
+          <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat"></i> Comentar</button>
+        </div>
+      </div>
+
+      </div>
+
+    <div class="col-12 col-md-5 col-lg-3 d-none d-md-block">
+      <div class="sticky-top" style="top: 20px;">
+        <div class="card p-3 shadow-sm">
+          <h5 class="mb-3">Sugerencias para ti</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Perfil Interesante
+              <button class="btn btn-sm btn-success">Seguir</button>
+            </li>
+             <li class="list-group-item d-flex justify-content-between align-items-center">
+              Otra Cuenta Genial
+              <button class="btn btn-sm btn-success">Seguir</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

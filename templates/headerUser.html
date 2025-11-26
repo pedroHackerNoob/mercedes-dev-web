@@ -16,36 +16,48 @@
 <section>
     <!--- Header -->
     <header>
-  <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
 
       <a class="navbar-brand fw-bold" href="#">
-        <i class="bi bi-people-fill me-2 text-primary"></i> Potro Crew
+        <i class="bi bi-people-fill me-2"></i> Potro Crew
       </a>
 
       <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#authNavbar"
-        aria-controls="authNavbar"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="authNavbar">
+      <div class="collapse navbar-collapse" id="navbarNav">
 
-        <div class="navbar-nav ms-auto">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Explorar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Notificaciones</a>
+          </li>
+        </ul>
 
-          <a class="btn btn-primary me-2 mb-2 mb-sm-0" href="/">
-            Iniciar Sesión
-          </a>
+        <div class="d-flex align-items-center">
 
-          <a class="btn btn-outline-secondary" href="/test">
-            Crear Cuenta
-          </a>
+            <form class="d-flex me-3" role="search">
+                <input class="form-control form-control-sm" type="search" placeholder="Buscar usuarios..." aria-label="Search">
+            </form>
+
+            <a class="btn btn-outline-light" href="#">
+                <i class="bi bi-person-circle me-1"></i> Perfil
+            </a>
 
         </div>
       </div>

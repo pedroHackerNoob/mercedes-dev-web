@@ -25,11 +25,11 @@ def get_db():
 # ---Ruta 0: test (GET) ---
 @app.route('/')
 def logInTest():
-    return render_template('logIn.html')
+    return render_template('profileUser.html')
 
 @app.route('/test')
 def signInTest():
-    return render_template('signUp.html')
+    return render_template('main.html')
 
 
 # --- RUTA: CREAR CATEGORÍA (POST) ---
