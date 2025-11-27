@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from flask import flash, redirect, url_for, render_template, request # Asegúrate de tener estos imports
 from persistence.db import engine, Base, SessionLocal
 # Importamos tus modelos
 from entities.models import User, Category, Thread, Comment
@@ -46,9 +47,6 @@ def get_db():
 def landingPage():
     return render_template('landingPage.html')
 
-@app.route('/login')
-def loginPage():
-    return render_template('logIn.html')
 
 @app.route('/signup')
 def signupPage():
@@ -300,23 +298,51 @@ def get_categories():
     db.close()
     return jsonify([{"id": c.id, "name": c.name} for c in cats])
 
+@app.route('/api/login')
+def loginPage():
+    return render_template('logIn.html')
 
 # --- RUTA LOGIN (Verificar contraseña) ---
-@app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    # 1. SI ENTRAN POR GET: Solo mostramos el formulario
+    if request.method == 'GET':
+        # Si ya está logueado, lo mandamos directo al perfil
+        if current_user.is_authenticated:
+            return redirect(url_for('profile'))
+        return render_template('login.html')
+
+    # 2. SI ENTRAN POR POST: Procesamos los datos
+
+    # Truco para soportar tanto Postman (JSON) como Navegador (Form)
+    if request.is_json:
+        data = request.get_json()
+        username = data.get('inputUserName')
+        password = data.get('inputPassword')
+    else:
+        # Aquí capturamos los datos del <input name="username">
+        username = request.form.get('inputUserName')
+        password = request.form.get('inputPassword')
 
     db = SessionLocal()
     try:
         user = db.query(User).filter(User.username == username).first()
 
         if user and check_password_hash(user.password, password):
-            # Esto crea la sesión y la cookie en el navegador
             login_user(user)
-            return jsonify({"message": "Login Exitoso", "user": user.username}), 200
+
+            # Si es navegador, redirigimos a la página visual
+            if not request.is_json:
+                return redirect(url_for('profile'))
+
+            # Si es Postman, devolvemos JSON
+            return jsonify({"message": "Login Exitoso"}), 200
         else:
+            # Si falló
+            if not request.is_json:
+                flash("Usuario o contraseña incorrectos")  # Mensaje para el HTML
+                return redirect(url_for('login'))  # Recargamos el login
+
             return jsonify({"error": "Credenciales inválidas"}), 401
     finally:
         db.close()
