@@ -1,61 +1,141 @@
 {% include 'headerUser.html' %}
-<div class="container mt-4">
-  <div class="row g-4">
+<div class="card p-3 mb-4 mt-6 shadow-sm">
+  <h5 class="mb-3">¿Qué estás pensando, Usuario?</h5>
+  <form>
 
-    <div class="col-lg-3 d-none d-lg-block">
-      <div class="sticky-top" style="top: 20px;">
-        <div class="card p-3 shadow-sm">
-          <h5 class="mb-3">Explorar</h5>
-          <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-person-lines-fill me-2"></i> Amigos</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-calendar-event me-2"></i> Eventos</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-controller me-2"></i> Juegos</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="#"><i class="bi bi-gear me-2"></i> Configuración</a></li>
-          </ul>
-        </div>
+      <textarea
+          class="form-control mb-3"
+          id="newThreadContent"
+          rows="3"
+          placeholder="Crea un nuevo hilo, comparte una idea o una foto..."
+      ></textarea>
+
+      <div class="input-group mb-3">
+          <span class="input-group-text fw-bold text-muted" id="hashtag-addon">#</span>
+          <input
+              type="text"
+              class="form-control"
+              placeholder="Categoría (ej: Memes, Noticias, Tecnología)"
+              aria-label="Hashtag Category"
+              aria-describedby="hashtag-addon"
+              id="threadCategory"
+          >
       </div>
+
+      <div class="d-flex justify-content-between align-items-center">
+          <div>
+              <button type="button" class="btn btn-light me-2 text-primary" title="Añadir Imagen">
+                  <i class="bi bi-image fs-5"></i>
+                  Adjuntar Imagen
+              </button>
+              <button type="button" class="btn btn-light text-success" title="Añadir Ubicación">
+                  <i class="bi bi-geo-alt fs-5"></i>
+                  Adjuntar Ubicacion
+              </button>
+          </div>
+          <button type="submit" class="btn btn-primary">Publicar Hilo</button>
+      </div>
+  </form>
+</div>
+{# threads #}
+<div class="card mb-4 shadow-sm">
+
+  <div class="card-header d-flex align-items-center">
+    <img src="avatar-amigo.png" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+    <div>
+        <h6 class="mb-0 fw-bold">AmigoEjemplo</h6>
+        <small class="text-muted">hace 3 horas</small>
     </div>
-
-    <div class="col-12 col-lg-6">
-
-      <div class="card p-3 mb-4 shadow-sm">
-        <h5>¿Qué estás pensando, Usuario?</h5>
-        <textarea class="form-control mb-2" rows="2" placeholder="Escribe tu nueva publicación..."></textarea>
-        <button class="btn btn-primary btn-sm">Publicar</button>
-      </div>
-
-      <div class="card mb-3 shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">UsuarioEjemplo <small class="text-muted ms-2">hace 5 min</small></h6>
-          <i class="bi bi-three-dots"></i>
-        </div>
-        <img src="placeholder-post-image.jpg" class="card-img-top" alt="Imagen de Publicación">
-        <div class="card-body">
-          <p class="card-text">¡Me encanta este nuevo diseño! La clave está en usar bien las clases de Bootstrap. #ResponsiveDesign</p>
-          <button class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-hand-thumbs-up"></i> Me gusta</button>
-          <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat"></i> Comentar</button>
-        </div>
-      </div>
-
-      </div>
-
-    <div class="col-12 col-md-5 col-lg-3 d-none d-md-block">
-      <div class="sticky-top" style="top: 20px;">
-        <div class="card p-3 shadow-sm">
-          <h5 class="mb-3">Sugerencias para ti</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Perfil Interesante
-              <button class="btn btn-sm btn-success">Seguir</button>
-            </li>
-             <li class="list-group-item d-flex justify-content-between align-items-center">
-              Otra Cuenta Genial
-              <button class="btn btn-sm btn-success">Seguir</button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="card-body">
+    <p class="card-text">
+        ¡Excelente fin de semana! Los nuevos cambios de diseño responsive de mi proyecto con Bootstrap se ven increíbles en todos los dispositivos. ¡Estoy listo para el lanzamiento!
+    </p>
+    <small class="text-primary fw-bold">#DesarrolloWeb #Bootstrap</small>
+  </div>
+
+  <div class="card-footer d-flex justify-content-around">
+    <button class="btn btn-sm btn-light w-100 me-1"><i class="bi bi-heart me-1 text-danger"></i> 14 Me gusta</button>
+    <button class="btn btn-sm btn-light w-100 ms-1" data-bs-toggle="collapse" data-bs-target="#comments-1"><i class="bi bi-chat me-1"></i> 5 Comentarios</button>
+  </div>
+
+  <div class="collapse show" id="comments-1">
+    <div class="p-3 border-top">
+
+      <form class="mb-3 d-flex">
+        <input type="text" class="form-control form-control-sm me-2" placeholder="Escribe un comentario...">
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Enviar</button>
+      </form>
+
+      <div class="d-flex mb-2">
+        <img src="avatar-comentarista.png" alt="Avatar" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+        <div>
+          <span class="fw-bold me-1">Comentarista_1</span>
+          <small class="text-muted">¡Se ve muy profesional! ¿Qué versión de Bootstrap usaste?</small>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <img src="avatar-comentarista-2.png" alt="Avatar" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+        <div>
+          <span class="fw-bold me-1">Laura_UX</span>
+          <small class="text-muted">¡Me encanta el diseño de las tarjetas!</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{#test#}
+<div class="card mb-4 shadow-sm">
+
+  <div class="card-header d-flex align-items-center">
+    <img src="avatar-amigo.png" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+    <div>
+        <h6 class="mb-0 fw-bold">AmigoEjemplo</h6>
+        <small class="text-muted">hace 3 horas</small>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <p class="card-text">
+        ¡Excelente fin de semana! Los nuevos cambios de diseño responsive de mi proyecto con Bootstrap se ven increíbles en todos los dispositivos. ¡Estoy listo para el lanzamiento!
+    </p>
+    <small class="text-primary fw-bold">#DesarrolloWeb #Bootstrap</small>
+  </div>
+
+  <div class="card-footer d-flex justify-content-around">
+    <button class="btn btn-sm btn-light w-100 me-1"><i class="bi bi-heart me-1 text-danger"></i> 14 Me gusta</button>
+    <button class="btn btn-sm btn-light w-100 ms-1" data-bs-toggle="collapse" data-bs-target="#comments-1"><i class="bi bi-chat me-1"></i> 5 Comentarios</button>
+  </div>
+
+  <div class="collapse show" id="comments-1">
+    <div class="p-3 border-top">
+
+      <form class="mb-3 d-flex">
+        <input type="text" class="form-control form-control-sm me-2" placeholder="Escribe un comentario...">
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Enviar</button>
+      </form>
+
+      <div class="d-flex mb-2">
+        <img src="avatar-comentarista.png" alt="Avatar" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+        <div>
+          <span class="fw-bold me-1">Comentarista_1</span>
+          <small class="text-muted">¡Se ve muy profesional! ¿Qué versión de Bootstrap usaste?</small>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <img src="avatar-comentarista-2.png" alt="Avatar" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+        <div>
+          <span class="fw-bold me-1">Laura_UX</span>
+          <small class="text-muted">¡Me encanta el diseño de las tarjetas!</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
