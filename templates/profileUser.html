@@ -19,8 +19,8 @@
                       class="img-fluid rounded-circle border border-5 border-light shadow-sm"
                       style="width: 150px; height: 150px; object-fit: cover;"
                     >
-                    <h4 class="mt-3">Nombre de Usuario</h4>
-                    <p class="text-muted">Miembro desde: Enero 2023</p>
+                    <h4 class="mt-3">{{ user.id }}</h4>
+                    <p class="text-muted">Miembro desde: Nomviembre 2025</p>
                     <button class="btn btn-sm btn-outline-primary mt-2">Editar Foto</button>
                 </div>
 
@@ -31,12 +31,12 @@
 
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="fw-bold">Correo Electrónico:</span>
-                        <span>usuario.ejemplo@email.com</span>
+                        <span>{{ user.email }}</span>
                       </li>
 
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="fw-bold">Nombre Completo:</span>
-                        <span>Juan Pérez García</span>
+                        <span>{{ user.username }}</span>
                       </li>
 
                       <li class="list-group-item d-flex justify-content-between align-items-center">
