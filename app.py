@@ -42,9 +42,13 @@ def get_db():
         pass
 
 
-# ---Ruta 0: test (GET) ---
 @app.route('/')
-def landingPage():
+def landing_page():
+    # Si estás logueado y vas aquí, mejor te mando a tu perfil
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+
+    # Si no, muestro la bienvenida
     return render_template('landingPage.html')
 
 
@@ -298,31 +302,52 @@ def get_categories():
     db.close()
     return jsonify([{"id": c.id, "name": c.name} for c in cats])
 
-@app.route('/api/login')
-def loginPage():
-    return render_template('logIn.html')
 
-# --- RUTA LOGIN (Verificar contraseña) ---
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    # Solo aceptamos JSON
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Se requiere JSON"}), 400
+
+    username = data.get('username')
+    password = data.get('password')
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.username == username).first()
+
+        if user and check_password_hash(user.password, password):
+            login_user(user)  # Crea la sesión (cookie)
+            return jsonify({
+                "message": "Login API exitoso",
+                "user_id": user.id,
+                "username": user.username
+            }), 200
+        else:
+            return jsonify({"error": "Credenciales inválidas"}), 401
+    finally:
+        db.close()
+
+
+@app.route('/api/logout', methods=['POST'])
+@login_required
+def api_logout():
+    logout_user()
+    return jsonify({"message": "Sesión cerrada (API)"}), 200
+
+
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    # 1. SI ENTRAN POR GET: Solo mostramos el formulario
+def web_login():
+    # 1. GET: Mostrar el formulario
     if request.method == 'GET':
-        # Si ya está logueado, lo mandamos directo al perfil
         if current_user.is_authenticated:
             return redirect(url_for('profile'))
         return render_template('login.html')
 
-    # 2. SI ENTRAN POR POST: Procesamos los datos
-
-    # Truco para soportar tanto Postman (JSON) como Navegador (Form)
-    if request.is_json:
-        data = request.get_json()
-        username = data.get('inputUserName')
-        password = data.get('inputPassword')
-    else:
-        # Aquí capturamos los datos del <input name="username">
-        username = request.form.get('inputUserName')
-        password = request.form.get('inputPassword')
+    # 2. POST: Procesar el formulario HTML
+    username = request.form.get('username')
+    password = request.form.get('password')
 
     db = SessionLocal()
     try:
@@ -330,30 +355,22 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
-
-            # Si es navegador, redirigimos a la página visual
-            if not request.is_json:
-                return redirect(url_for('profile'))
-
-            # Si es Postman, devolvemos JSON
-            return jsonify({"message": "Login Exitoso"}), 200
+            # En web, redirigimos al perfil visual
+            return redirect(url_for('profile'))
         else:
-            # Si falló
-            if not request.is_json:
-                flash("Usuario o contraseña incorrectos")  # Mensaje para el HTML
-                return redirect(url_for('login'))  # Recargamos el login
-
-            return jsonify({"error": "Credenciales inválidas"}), 401
+            flash("Usuario o contraseña incorrectos")
+            return redirect(url_for('web_login'))  # Recargamos la misma ruta
     finally:
         db.close()
 
 
-# LOGOUT
-@app.route('/api/logout')
+@app.route('/logout')  # Por defecto es GET en navegadores al hacer clic en un enlace
 @login_required
-def logout():
+def web_logout():
     logout_user()
-    return jsonify({"message": "Sesión cerrada"}), 200
+    # En web, redirigimos a la página de inicio
+    return redirect(url_for('landing_page'))
+
 
 @app.route('/profile')
 @login_required # <--- Esto protege la ruta. Si no estás logueado, te patea.
