@@ -7,21 +7,21 @@
       <div class="card shadow-lg p-4 p-md-5">
         <h3 class="text-center mb-4">Crear Nueva Cuenta</h3>
 
-        <form>
+        <form action="/signup" method="POST">
 
           <div class="mb-3">
             <label for="inputEmail" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="inputEmail" required>
+            <input type="email" class="form-control" name="inputEmail" required>
           </div>
 
           <div class="mb-3">
-            <label for="inputUsername" class="form-label">Nombre de Usuario</label>
-            <input type="text" class="form-control" id="inputUsername" required>
+            <label for="inputUserName" class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" name="inputUserName" required>
           </div>
 
           <div class="mb-3">
             <label for="inputPassword" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="inputPassword" required>
+            <input type="password" class="form-control" name="inputPassword" required>
           </div>
 
           <div class="d-grid gap-2 mt-4">
