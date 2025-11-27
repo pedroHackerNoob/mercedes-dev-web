@@ -7,6 +7,7 @@ from entities.models import User, Category, Thread, Comment
 from werkzeug.security import generate_password_hash, check_password_hash
 # FLASK-LOGIN
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from sqlalchemy import desc  # Importar para ordenar descendente
 app = Flask(__name__)
 
 # SECRET_KEY (Para firmar las cookies)
@@ -438,5 +439,50 @@ def profile():
     # No necesitamos consultar la DB, current_user ya tiene los datos
     return render_template('profileUser.html', user=current_user)
 
+
+# --- RUTA 1: EL FEED VISUAL (GET) ---
+@app.route('/')
+@app.route('/feed')
+# @login_required
+def web_feed():
+    # db = SessionLocal()
+    # try:
+    #     # Traemos los hilos ordenados por fecha de creación (el más nuevo primero)
+    #     # SQLAlchemy hace la magia de traer los comentarios automáticamente cuando los pidamos en el HTML
+    #     threads = db.query(Thread).order_by(desc(Thread.created_at)).all()
+    # finally:
+    #     db.close()
+
+    return render_template('main.html')
+
+
+# --- RUTA 2: CREAR COMENTARIO DESDE LA WEB (POST) ---
+@app.route('/create_comment_web', methods=['POST'])
+@login_required
+def create_comment_web():
+    thread_id = request.form.get('thread_id')  # Viene del input oculto
+    content = request.form.get('content')
+
+    if not content or not thread_id:
+        flash("El comentario no puede estar vacío")
+        return redirect(url_for('web_feed'))
+
+    db = SessionLocal()
+    try:
+        new_comment = Comment(
+            content=content,
+            user_id=current_user.id,
+            thread_id=thread_id
+        )
+        db.add(new_comment)
+        db.commit()
+        flash("Comentario agregado!")
+    except Exception as e:
+        flash(f"Error al comentar: {str(e)}")
+    finally:
+        db.close()
+
+    # Recargamos el feed para ver el nuevo comentario
+    return redirect(url_for('web_feed'))
 if __name__ == '__main__':
     app.run(debug=True)
