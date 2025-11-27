@@ -52,11 +52,6 @@ def landing_page():
     return render_template('landingPage.html')
 
 
-@app.route('/signup')
-def signupPage():
-    return render_template('signUp.html')
-
-
 # --- RUTA: CREAR CATEGORÍA (POST) ---
 @app.route('/api/categories', methods=['POST'])
 def create_category():
@@ -80,31 +75,86 @@ def create_category():
         db.close()
 
 
-# --- RUTA: CREAR USUARIO (POST) ---
-@app.route('/api/users', methods=['POST'])
-def create_user():
+# ==========================================
+# 🤖 API SIGN UP (Para Postman)
+# ==========================================
+@app.route('/api/signup', methods=['POST'])
+def api_signup():
     data = request.get_json()
-
-    # Validamos que venga el password
-    if not 'password' in data:
-        return jsonify({"error": "La contraseña es obligatoria"}), 400
+    # Validamos que lleguen los datos
+    if not data or not all(k in data for k in ("username", "email", "password")):
+        return jsonify({"error": "Faltan datos (username, email, password)"}), 400
 
     db = SessionLocal()
     try:
-        # ENCRIPTAMOS LA CONTRASEÑA ANTES DE GUARDAR
-        hashed_password = generate_password_hash(data['password'])
+        # 1. Verificar si ya existe
+        existing_user = db.query(User).filter(
+            (User.username == data['username']) | (User.email == data['email'])
+        ).first()
 
+        if existing_user:
+            return jsonify({"error": "El usuario o email ya existen"}), 400
+
+        # 2. Encriptar contraseña
+        hashed_pw = generate_password_hash(data['password'])
+
+        # 3. Crear usuario
         new_user = User(
             username=data['username'],
             email=data['email'],
-            password=hashed_password  # Guardamos el garabato seguro, no el texto plano
+            password=hashed_pw
         )
+        db.add(new_user)
+        db.commit()
+
+        return jsonify({"message": "Usuario registrado con éxito"}), 201
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+
+# ==========================================
+# 🌐 WEB SIGN UP (Para Navegador)
+# ==========================================
+@app.route('/signup', methods=['GET', 'POST'])
+def web_signup():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect(url_for('profile'))
+        return render_template('signUp.html')
+
+    username = request.form.get('inputUserName')
+    email = request.form.get('inputEmail')
+    password = request.form.get('inputPassword')
+    print(username, email, password)
+    db = SessionLocal()
+    try:
+        # 1. Validar duplicados
+        existing_user = db.query(User).filter(
+            (User.username == username) | (User.email == email)
+        ).first()
+
+        if existing_user:
+            flash("Error: El nombre de usuario o correo ya están en uso.")
+            return redirect(url_for('web_signup'))  # Recargamos el formulario
+
+        # 2. Crear y Guardar
+        hashed_pw = generate_password_hash(password)
+        new_user = User(username=username, email=email, password=hashed_pw)
 
         db.add(new_user)
         db.commit()
-        return jsonify({"message": f"Usuario {new_user.username} creado con seguridad!"}), 201
+
+        # 3. Éxito -> Mandar al Login
+        flash("¡Cuenta creada! Por favor inicia sesión.")
+        return redirect(url_for('web_login'))
+
     except Exception as e:
-        return jsonify({"error": f"Error creando usuario: {str(e)}"}), 400
+        db.rollback()
+        flash(f"Ocurrió un error: {str(e)}")
+        return redirect(url_for('web_signup'))
     finally:
         db.close()
 
@@ -303,6 +353,10 @@ def get_categories():
     return jsonify([{"id": c.id, "name": c.name} for c in cats])
 
 
+# ==========================================
+# 🤖 ZONA API (Para Postman, React, Móvil)
+# Devuelve solo JSON
+# ==========================================
 @app.route('/api/login', methods=['POST'])
 def api_login():
     # Solo aceptamos JSON
@@ -336,7 +390,10 @@ def api_logout():
     logout_user()
     return jsonify({"message": "Sesión cerrada (API)"}), 200
 
-
+# ==========================================
+# 🌐 ZONA WEB (Para Navegadores)
+# Devuelve HTML y Redirecciones
+# ==========================================
 @app.route('/login', methods=['GET', 'POST'])
 def web_login():
     # 1. GET: Mostrar el formulario
@@ -367,7 +424,7 @@ def web_login():
         db.close()
 
 
-@app.route('/logout')  # Por defecto es GET en navegadores al hacer clic en un enlace
+@app.route('/logout')
 @login_required
 def web_logout():
     logout_user()
