@@ -24,16 +24,16 @@
         <div class="card p-4 shadow-lg bg-white">
             <h4 class="text-center mb-4">Inicia Sesión o Regístrate</h4>
 
-            <form>
+            <form action="/login" method="POST">
               <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Correo Electrónico">
+                <input type="text" class="form-control" placeholder="Nombre de usuario" name="inputUserName">
               </div>
               <div class="mb-4">
-                <input type="password" class="form-control" placeholder="Contraseña">
+                <input type="password" class="form-control" placeholder="Contraseña" name="inputPassword">
               </div>
 
               <div class="d-grid gap-2">
-                 <button type="submit" class="btn btn-success btn-lg">Iniciar Sesión</button>
+                 <button type="submit" class="btn btn-success btn-lg text-white">Iniciar Sesión</button>
               </div>
             </form>
 
