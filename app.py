@@ -343,11 +343,13 @@ def web_login():
     if request.method == 'GET':
         if current_user.is_authenticated:
             return redirect(url_for('profile'))
-        return render_template('login.html')
+        return render_template('logIn.html')
 
     # 2. POST: Procesar el formulario HTML
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.form.get('inputUserName')
+    password = request.form.get('inputPassword')
+
+    print(username, password)
 
     db = SessionLocal()
     try:
@@ -359,7 +361,8 @@ def web_login():
             return redirect(url_for('profile'))
         else:
             flash("Usuario o contraseña incorrectos")
-            return redirect(url_for('web_login'))  # Recargamos la misma ruta
+            # return redirect(url_for('web_login'))  # Recargamos la misma ruta
+            return redirect(url_for('landing_page'))
     finally:
         db.close()
 
