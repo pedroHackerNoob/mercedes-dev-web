@@ -1,0 +1,43 @@
+{% include 'index.html' %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 text-primary">Agenda tu Próxima Cita 💅</h1>
+    <div class="card p-3 mb-4 bg-light">
+        <h4 class="card-title">Paso 1: Selecciona el Servicio</h4>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 service-card" data-service-id="1">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Corte Dama</h5>
+                    <p class="card-text text-muted">Incluye lavado y secado express.</p>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="bi bi-clock"></i> Duración: <span class="fw-bold">45 minutos</span></li>
+                        <li><i class="bi bi-currency-dollar"></i> Precio: <span class="fw-bold">$35.00</span></li>
+                    </ul>
+                    <button class="btn btn-outline-primary w-100 mt-2">Seleccionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 service-card" data-service-id="2">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Tinte Completo</h5>
+                    <p class="card-text text-muted">Aplicación de color de raíz a punta.</p>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="bi bi-clock"></i> Duración: <span class="fw-bold">120 minutos</span></li>
+                        <li><i class="bi bi-currency-dollar"></i> Precio: <span class="fw-bold">$80.00</span></li>
+                    </ul>
+                    <button class="btn btn-outline-primary w-100 mt-2">Seleccionar</button>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    <div class="text-center mt-5">
+        <a href="/user/style" class="btn btn-lg btn-secondary ">Continuar al Paso 2</a>
+    </div>
+</div>

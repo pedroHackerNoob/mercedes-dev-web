@@ -1,0 +1,50 @@
+{% include 'index.html' %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 text-primary">Agenda tu Próxima Cita 🗓️</h1>
+    <div class="card p-3 mb-4 bg-light">
+        <h4 class="card-title">Paso 2: Estilista y Horario</h4>
+        <p class="text-muted">Servicio Seleccionado: <span class="fw-bold">Corte Dama (45 min)</span></p>
+    </div>
+
+    <div class="alert alert-danger d-block mb-4" role="alert">
+        ❌ ¡Lo sentimos! La hora de las 10:00 AM ya está ocupada para **Ana Pérez** (finaliza a las 10:45 AM). Por favor, elige otro bloque.
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <h5 class="mb-3 text-secondary">Elige a tu Estilista</h5>
+            <div class="list-group">
+                <button type="button" class="list-group-item list-group-item-action active">
+                    Ana Pérez (Especialista en Corte)
+                </button>
+                <button type="button" class="list-group-item list-group-item-action">
+                    Carlos López (Especialista en Color)
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h5 class="mb-3 text-secondary">Elige Día y Hora (2025-12-01)</h5>
+            <div class="bg-white p-3 border rounded shadow-sm">
+                <div class="row g-2">
+                    <div class="col-3">
+                        <button class="btn btn-outline-success w-100">09:00 AM</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-outline-success w-100 disabled">09:45 AM</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-danger w-100 disabled" title="Ocupado">10:00 AM</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-outline-success w-100">11:30 AM</button>
+                    </div>
+                    </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/user/style/confirm" class="btn btn-lg btn-primary">Confirmar Cita (Ir a la Confirmación)</a>
+            </div>
+        </div>
+    </div>
+</div>
