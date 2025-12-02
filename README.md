@@ -27,3 +27,18 @@ Backend para una red social ligera basada en Hilos (Threads). Desarrollada con P
 │   └── db.py              # Configuración del Engine y Session de la BD
 └── entities/
     └── models.py          # Definición de Tablas (User, Thread, Comment, Category)
+└── templates/
+    └── footer.html         #
+    └── header.html         # 
+    └── headerUser.html     # 
+    └── landingPage.html    #
+    └── logIn.html          # 
+    └── main.html           #
+    └── profileUser.html    #
+    └── signUp.html         #
+
+
+
+
+
+
