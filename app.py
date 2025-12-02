@@ -443,19 +443,16 @@ def profile():
 # --- RUTA 1: EL FEED VISUAL (GET) ---
 @app.route('/')
 @app.route('/feed')
-# @login_required
+@login_required
 def web_feed():
-    # db = SessionLocal()
-    # try:
-    #     # Traemos los hilos ordenados por fecha de creación (el más nuevo primero)
-    #     # SQLAlchemy hace la magia de traer los comentarios automáticamente cuando los pidamos en el HTML
-    #     threads = db.query(Thread).order_by(desc(Thread.created_at)).all()
-    # finally:
-    #     db.close()
-
-    return render_template('main.html')
-
-
+    db = SessionLocal()
+    try:
+        # Traemos los hilos ordenados por fecha de creación (el más nuevo primero)
+        # SQLAlchemy hace la magia de traer los comentarios automáticamente cuando los pidamos en el HTML
+        threads = db.query(Thread).order_by(desc(Thread.created_at)).all()
+        return render_template('feed.html', threads=threads)
+    finally:
+        db.close()
 # --- RUTA 2: CREAR COMENTARIO DESDE LA WEB (POST) ---
 @app.route('/create_comment_web', methods=['POST'])
 @login_required
