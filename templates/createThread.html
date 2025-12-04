@@ -1,0 +1,48 @@
+{% include 'headerUser.html' %}
+<div class="bg-light">
+
+    <div class="container mt-15">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0 text-white">Publicar Nuevo Hilo</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/create_thread_web" method="POST">
+
+                            <div class="mb-3">
+                                <label class="form-label">Título</label>
+                                <input type="text" name="title" class="form-control" placeholder="Ej: Duda sobre Python..." required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Categoría</label>
+                                <select name="category_id" class="form-select" required>
+                                    <option value="" disabled selected>Selecciona una opción...</option>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Contenido</label>
+                                <textarea name="content" class="form-control" rows="5" placeholder="Escribe aquí tu historia..." required></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success text-white">Publicar</button>
+                                <a href="/feed" class="btn btn-secondary text-white">Cancelar</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

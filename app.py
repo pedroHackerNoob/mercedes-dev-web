@@ -198,6 +198,47 @@ def create_thread():
         db.close()
 
 
+# --- RUTA PARA CREAR HILO DESDE LA WEB ---
+@app.route('/create_thread_web', methods=['GET', 'POST'])
+@login_required
+def create_thread_web():
+    db = SessionLocal()
+
+    # A. Si es GET: Mostramos el formulario
+    if request.method == 'GET':
+        # Buscamos las categorías para llenar el selector
+        categories = db.query(Category).all()
+        db.close()
+        return render_template('createThread.html', categories=categories)
+
+    # B. Si es POST: Guardamos el hilo
+    try:
+        title = request.form.get('title')
+        content = request.form.get('content')
+        category_id = request.form.get('category_id')
+
+        new_thread = Thread(
+            title=title,
+            content=content,
+            user_id=current_user.id,  # El usuario logueado
+            category_id=category_id
+        )
+
+        db.add(new_thread)
+        db.commit()
+        flash("¡Hilo publicado con éxito!")
+        return redirect(url_for('web_feed'))  # Volver al muro
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Error al publicar: {str(e)}")
+        return redirect(url_for('create_thread_web'))
+    finally:
+        db.close()
+
+@app.route('/test')
+def create_thread_api_test():
+    return render_template('createThread.html')
 # --- RUTA: COMENTAR UN HILO ---
 @app.route('/api/comments', methods=['POST'])
 def create_comment():
