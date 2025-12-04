@@ -4,7 +4,10 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 # 1. Obtenemos la URL de Render o usamos una local por defecto
 # DATABASE_URL es la variable que Render crea automáticamente
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://rayan:W1fjeCrTQiV575iW8P6BRbAV9vl1vJcw@dpg-d4gddi9r0fns738c9ms0-a.oregon-postgres.render.com/reach_ehnv")
+# local DB
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://localhost:5432/postgres")
+# online DB
+# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://rayan:W1fjeCrTQiV575iW8P6BRbAV9vl1vJcw@dpg-d4gddi9r0fns738c9ms0-a.oregon-postgres.render.com/reach_ehnv")
 
 # 2. Parche para Render (Postgres requiere 'postgresql://', pero Render a veces da 'postgres://')
 if SQLALCHEMY_DATABASE_URL and SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
