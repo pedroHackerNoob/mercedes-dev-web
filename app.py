@@ -236,9 +236,6 @@ def create_thread_web():
     finally:
         db.close()
 
-@app.route('/test')
-def create_thread_api_test():
-    return render_template('createThread.html')
 # --- RUTA: COMENTAR UN HILO ---
 @app.route('/api/comments', methods=['POST'])
 def create_comment():
