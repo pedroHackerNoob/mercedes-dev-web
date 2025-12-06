@@ -1,0 +1,33 @@
+{% include 'headerUser.html' %}
+<div class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">✏️ Editar Comentario</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/edit_comment/{{ comment.id }}" method="POST">
+
+                            <div class="mb-3">
+                                <label class="form-label">Tu comentario:</label>
+                                <textarea name="content" class="form-control" rows="3" required>{{ comment.content }}</textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="/feed" class="btn btn-outline-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

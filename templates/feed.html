@@ -42,9 +42,19 @@
                         <h6>Comentarios ({{ thread.comments|length }})</h6>
 
                         {% for comment in thread.comments %}
-                            <div class="comment-item">
-                                <strong>{{ comment.author.username }}:</strong>
-                                {{ comment.content }}
+                            <div class="comment-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>{{ comment.author.username }}:</strong>
+                                    {{ comment.content }}
+                                </div>
+
+                                {% if current_user.is_authenticated and current_user.id == comment.author.id %}
+                                    <a href="/edit_comment/{{ comment.id }}"
+                                       class="text-decoration-none text-muted ms-2"
+                                       style="font-size: 0.8em;">
+                                       ✏️
+                                    </a>
+                                {% endif %}
                             </div>
                         {% else %}
                             <p class="text-muted small">Sé el primero en comentar.</p>

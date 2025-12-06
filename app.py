@@ -564,5 +564,49 @@ def edit_thread(thread_id):
         return redirect(url_for('web_feed'))
     finally:
         db.close()
+
+
+# --- RUTA PARA EDITAR UN COMENTARIO ---
+@app.route('/edit_comment/<int:comment_id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(comment_id):
+    db = SessionLocal()
+    try:
+        # 1. Buscamos el comentario
+        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+
+        if not comment:
+            flash("El comentario no existe.")
+            return redirect(url_for('web_feed'))
+
+        # 2. SEGURIDAD: ¿Es el usuario actual el dueño?
+        if comment.user_id != current_user.id:
+            flash("No puedes editar comentarios de otros.")
+            return redirect(url_for('web_feed'))
+
+        # --- SI ES GET: MOSTRAR FORMULARIO ---
+        if request.method == 'GET':
+            return render_template('editComment.html', comment=comment)
+
+        # --- SI ES POST: GUARDAR CAMBIOS ---
+        new_content = request.form.get('content')
+
+        if not new_content:
+            flash("El comentario no puede quedar vacío.")
+            return redirect(url_for('edit_comment', comment_id=comment_id))
+
+        comment.content = new_content
+        db.commit()
+
+        flash("Comentario actualizado.")
+        return redirect(url_for('web_feed'))
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Error al editar comentario: {str(e)}")
+        return redirect(url_for('web_feed'))
+    finally:
+        db.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
