@@ -21,7 +21,16 @@
                             <strong>{{ thread.author.username }}</strong>
                             <span class="text-muted" style="font-size: 0.8em;">• {{ thread.created_at }}</span>
                         </div>
-                        <span class="badge bg-secondary badge-category">{{ thread.category.name }}</span>
+
+                        <div>
+                            <span class="badge bg-secondary badge-category me-2">{{ thread.category.name }}</span>
+
+                            {% if current_user.is_authenticated and current_user.id == thread.author.id %}
+                                <a href="/edit_thread/{{ thread.id }}" class="btn btn-sm btn-outline-warning" style="font-size: 0.7em;">
+                                    ✏️ Editar
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="card-body">

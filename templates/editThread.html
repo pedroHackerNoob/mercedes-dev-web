@@ -1,0 +1,48 @@
+{% include 'headerUser.html' %}
+<div class="bg-light">
+    <div class="container mt-14">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark"> <h4 class="mb-0">Editar Hilo</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/edit_thread/{{ thread.id }}" method="POST">
+
+                            <div class="mb-3">
+                                <label class="form-label">Título</label>
+                                <input type="text" name="title" class="form-control" value="{{ thread.title }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Categoría</label>
+                                <select name="category_id" class="form-select" required>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}"
+                                            {% if cat.id == thread.category_id %} selected {% endif %}>
+                                            {{ cat.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Contenido</label>
+                                <textarea name="content" class="form-control" rows="5" required>{{ thread.content }}</textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                                <a href="/feed" class="btn btn-secondary">Cancelar</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -519,5 +519,50 @@ def create_comment_web():
 
     # Recargamos el feed para ver el nuevo comentario
     return redirect(url_for('web_feed'))
+
+
+# --- RUTA PARA EDITAR UN HILO EXISTENTE ---
+@app.route('/edit_thread/<int:thread_id>', methods=['GET', 'POST'])
+@login_required
+def edit_thread(thread_id):
+    db = SessionLocal()
+    try:
+        # 1. Buscamos el hilo
+        thread = db.query(Thread).filter(Thread.id == thread_id).first()
+
+        if not thread:
+            flash("El hilo no existe.")
+            return redirect(url_for('web_feed'))
+
+        # 2. SEGURIDAD: ¿Es el usuario actual el dueño?
+        if thread.user_id != current_user.id:
+            flash("¡Oye! No puedes editar el hilo de otra persona.")
+            return redirect(url_for('web_feed'))
+
+        # --- SI ES GET: MOSTRAR FORMULARIO CON DATOS ---
+        if request.method == 'GET':
+            categories = db.query(Category).all()  # Necesario para el select
+            return render_template('editThread.html', thread=thread, categories=categories)
+
+        # --- SI ES POST: GUARDAR CAMBIOS ---
+        title = request.form.get('title')
+        content = request.form.get('content')
+        category_id = request.form.get('category_id')
+
+        # Actualizamos los campos
+        thread.title = title
+        thread.content = content
+        thread.category_id = category_id
+
+        db.commit()
+        flash("Hilo actualizado correctamente.")
+        return redirect(url_for('web_feed'))
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Error al editar: {str(e)}")
+        return redirect(url_for('web_feed'))
+    finally:
+        db.close()
 if __name__ == '__main__':
     app.run(debug=True)
