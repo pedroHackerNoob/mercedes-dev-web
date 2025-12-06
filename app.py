@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-# from sqlalchemy import desc  <-- Ya no necesitamos esto aquí
 
 from persistence.db import engine, Base, SessionLocal
 from entities.models import User, Category, Thread, Comment
