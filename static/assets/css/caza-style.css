@@ -1,0 +1,107 @@
+/* ========================================================= */
+/* --- 1. Paleta de Colores (VARIABLES CENTRALIZADAS) --- */
+/* ========================================================= */
+:root {
+    --caza-negro-estrategico: #0A0A0B; /* Primario Oscuro (El más profundo) */
+    --caza-gris-sutil: #1A1A1C;        /* Gris Oscuro para secciones secundarias */
+    --caza-gris-atlas: #AAAAAA;        /* Gris Claro para texto secundario */
+    --caza-oro-pulsar: #FFD700;        /* Dorado Intenso (Acento Primario) */
+}
+
+/* ========================================================= */
+/* --- 2. Tipografía (Requiere importación externa) --- */
+/* ========================================================= */
+/* NOTA: Debe importar estas fuentes (Zenith, Crux, Aero) */
+
+.font-zenith {
+    font-family: 'Zenith', 'Garamond', serif; /* Para titulares (Autoridad) */
+}
+.font-crux {
+    font-family: 'Crux', 'Open Sans', sans-serif; /* Para texto principal (Legibilidad) */
+}
+.font-aero {
+    font-family: 'Aero', sans-serif; /* Para subtítulos (Contraste) */
+    letter-spacing: 0.1em;
+}
+
+/* ========================================================= */
+/* --- 3. Estilos Generales de Color (FONDOS Y TEXTO) --- */
+/* ========================================================= */
+
+.bg-caza-negro-estrategico {
+    background-color: var(--caza-negro-estrategico) !important;
+}
+
+.bg-caza-gris-sutil {
+    background-color: var(--caza-gris-sutil) !important;
+}
+
+/* Texto */
+.text-caza-oro-pulsar {
+    color: var(--caza-oro-pulsar) !important;
+}
+.text-gris-atlas {
+    color: var(--caza-gris-atlas) !important;
+}
+
+/* Manejo del color del texto sobre el fondo dorado */
+.bg-caza-oro-pulsar {
+    background-color: var(--caza-oro-pulsar) !important;
+    color: var(--caza-negro-estrategico) !important;
+}
+
+/* ========================================================= */
+/* --- 4. Componentes y Botones --- */
+/* ========================================================= */
+
+/* Efecto Hover para Enlaces/Texto (Corrección de sintaxis anidada) */
+.hover-oro {
+    transition: color 0.3s ease;
+}
+.hover-oro:hover,
+.text-caza-negro-estrategico:hover { /* Corregido para CSS estándar */
+    color: var(--caza-oro-pulsar) !important;
+}
+
+/* Botón Primario de Acción (Dorado) */
+.btn-caza-oro-pulsar {
+    background-color: var(--caza-oro-pulsar);
+    border-color: var(--caza-oro-pulsar);
+    color: var(--caza-negro-estrategico);
+    transition: all 0.3s ease;
+}
+
+.btn-caza-oro-pulsar:hover {
+    background-color: #e6c800; /* Dorado ligeramente más oscuro al hacer hover */
+    border-color: #e6c800;
+    color: var(--caza-negro-estrategico);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+}
+
+/* Estilo para tarjetas de Pilares y Servicios */
+.card-caza {
+    border: 1px solid var(--caza-gris-sutil);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--caza-negro-estrategico);
+}
+
+.card-caza:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    border-color: var(--caza-oro-pulsar);
+}
+
+/* Navegación (Header) */
+.navbar-scrolled {
+    background-color: rgba(10, 10, 11, 0.95) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo específico para inputs en la sección de Contacto */
+#contacto-caza .form-control,
+#contacto-caza .form-select {
+    border: 1px solid #DDDDDD;
+    background-color: #F8F9FA;
+    color: #343A40;
+}
