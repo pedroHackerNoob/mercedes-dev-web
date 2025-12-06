@@ -11,8 +11,6 @@
 /* ========================================================= */
 /* --- 2. Tipografía (Requiere importación externa) --- */
 /* ========================================================= */
-/* NOTA: Debe importar estas fuentes (Zenith, Crux, Aero) */
-
 .font-zenith {
     font-family: 'Zenith', 'Garamond', serif; /* Para titulares (Autoridad) */
 }
@@ -36,6 +34,11 @@
     background-color: var(--caza-gris-sutil) !important;
 }
 
+.bg-caza-oro-pulsar {
+    background-color: var(--caza-oro-pulsar) !important;
+    color: var(--caza-negro-estrategico) !important; /* Texto oscuro sobre fondo dorado */
+}
+
 /* Texto */
 .text-caza-oro-pulsar {
     color: var(--caza-oro-pulsar) !important;
@@ -44,42 +47,73 @@
     color: var(--caza-gris-atlas) !important;
 }
 
-/* Manejo del color del texto sobre el fondo dorado */
-.bg-caza-oro-pulsar {
-    background-color: var(--caza-oro-pulsar) !important;
-    color: var(--caza-negro-estrategico) !important;
+/* Efecto Hover para Enlaces/Texto */
+.hover-oro {
+    transition: color 0.3s ease;
 }
+.hover-oro:hover {
+    color: var(--caza-oro-pulsar) !important;
+}
+
 
 /* ========================================================= */
 /* --- 4. Componentes y Botones --- */
 /* ========================================================= */
 
-/* Efecto Hover para Enlaces/Texto (Corrección de sintaxis anidada) */
-.hover-oro {
-    transition: color 0.3s ease;
-}
-.hover-oro:hover,
-.text-caza-negro-estrategico:hover { /* Corregido para CSS estándar */
-    color: var(--caza-oro-pulsar) !important;
-}
-
-/* Botón Primario de Acción (Dorado) */
+/* --- A. Botón Primario (Dorado Pulsar) --- */
 .btn-caza-oro-pulsar {
     background-color: var(--caza-oro-pulsar);
     border-color: var(--caza-oro-pulsar);
     color: var(--caza-negro-estrategico);
+    padding: 10px 25px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
 .btn-caza-oro-pulsar:hover {
-    background-color: #e6c800; /* Dorado ligeramente más oscuro al hacer hover */
+    background-color: #e6c800; /* Dorado ligeramente más oscuro */
     border-color: #e6c800;
     color: var(--caza-negro-estrategico);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
 }
 
-/* Estilo para tarjetas de Pilares y Servicios */
+/* --- B. Botón Secundario (Negro/Gris) --- */
+.btn-caza-negro {
+    background-color: var(--caza-negro-estrategico);
+    color: white;
+    border: 1px solid var(--caza-gris-atlas);
+    padding: 10px 25px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-caza-negro:hover {
+    background-color: var(--caza-oro-pulsar);
+    border-color: var(--caza-oro-pulsar);
+    color: var(--caza-negro-estrategico);
+    /* No se aplica el transform para mantener la jerarquía visual */
+}
+
+/* --- C. Botón/Enlace de texto --- */
+.btn-caza-link {
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    transition: color 0.3s ease;
+}
+
+.btn-caza-link:hover {
+    color: var(--caza-oro-pulsar) !important;
+    text-decoration: underline;
+}
+
+/* --- D. Tarjetas --- */
 .card-caza {
     border: 1px solid var(--caza-gris-sutil);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -92,16 +126,97 @@
     border-color: var(--caza-oro-pulsar);
 }
 
-/* Navegación (Header) */
+/* --- E. Navegación (Header) --- */
 .navbar-scrolled {
     background-color: rgba(10, 10, 11, 0.95) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Estilo específico para inputs en la sección de Contacto */
+/* --- F. Inputs (Contacto) --- */
 #contacto-caza .form-control,
 #contacto-caza .form-select {
     border: 1px solid #DDDDDD;
     background-color: #F8F9FA;
     color: #343A40;
+}
+
+
+/* ========================================================= */
+/* --- 5. Sección Hero (ZENITH) Y RESPONSIVIDAD --- */
+/* ========================================================= */
+
+#hero-zenith {
+    background-color: var(--caza-negro-estrategico);
+    min-height: 85vh; /* Altura de impacto visual */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    text-align: center;
+}
+
+#hero-zenith h1 {
+    color: var(--caza-oro-pulsar);
+    font-size: 4.5em; /* Tamaño de escritorio */
+}
+
+#hero-zenith p {
+    color: var(--caza-gris-atlas);
+    font-size: 1.35em;
+    line-height: 1.6;
+}
+
+/* Ajuste de espaciado para botones en Hero (si no usa d-grid de Bootstrap) */
+#hero-zenith .btn {
+    margin: 10px;
+    padding: 12px 30px;
+    font-size: 1.1em;
+}
+
+/* --- Media Queries (Responsividad) --- */
+
+/* 1. Tabletas (Máximo 767.98px) */
+@media (max-width: 767.98px) {
+    /* Reducir el tamaño del título principal para que no se desborde */
+    #hero-zenith h1 {
+        font-size: 3em;
+    }
+
+    /* Reducir el texto del párrafo */
+    #hero-zenith p {
+        font-size: 1.1em;
+    }
+
+    /* Reducir el relleno vertical si el Hero es demasiado alto */
+    #hero-zenith {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        min-height: auto;
+    }
+}
+
+/* 2. Móviles (Máximo 575.98px) */
+@media (max-width: 575.98px) {
+    /* Reducir aún más el título para móviles */
+    #hero-zenith h1 {
+        font-size: 2.5em;
+    }
+
+    /* Reducir el tamaño y relleno de los botones */
+    .btn-caza-oro-pulsar,
+    .btn-caza-negro {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+        width: 100%; /* HACER QUE OCUPEN TODO EL ANCHO */
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 10px; /* Separación vertical entre botones apilados */
+    }
+
+    /* Quitar el margin de 10px que pusimos arriba si usamos el width: 100% */
+    #hero-zenith .btn {
+        margin: 0 0 10px 0;
+    }
 }

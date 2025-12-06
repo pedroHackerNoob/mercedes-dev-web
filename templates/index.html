@@ -1,24 +1,26 @@
 {% include 'header.html' %}
-<section id="hero-zenith" class="py-5 bg-white text-center">
+<section id="hero-zenith" class="py-5 text-center">
     <div class="container py-md-5">
-        <h1 class="font-zenith display-3 fw-bold text-caza-negro-estrategico">
+
+        <h1 class="font-zenith display-3 fw-bold fs-md-1 fs-sm-2">
             CRUX AERO ZENITH Agency
         </h1>
-        <p class="lead mb-4 font-crux text-muted">
-            <span class="text-oro-pulsar">"</span>El punto donde la estrategia se encuentra con la excelencia.<span class="text-oro-pulsar">"</span>
+
+        <p class="lead mb-4 font-crux text-white">
+            <span class="text-caza-oro-pulsar">"</span>El punto donde la estrategia se encuentra con la excelencia.<span class="text-caza-oro-pulsar">"</span>
         </p>
 
         <div class="col-lg-8 mx-auto">
-            <p class="font-crux fs-5">
+            <p class="font-crux fs-5 text-gris-atlas">
                 Diseñamos el **activo digital de legado** para Marcas Personales de alto nivel. Transformamos su autoridad en una plataforma de rendimiento **ZENITH**.
             </p>
         </div>
 
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
-            <a href="#contacto" class="btn btn-caza-primary btn-lg px-4 me-sm-3 font-crux">
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-4">
+            <a href="#contacto" class="btn btn-caza-oro-pulsar btn-lg px-4 font-crux">
                 Iniciar Sesión de Arquitectura
             </a>
-            <a href="#servicios-premium" class="btn btn-outline-secondary btn-lg px-4 font-crux">
+            <a href="#servicios-premium" class="btn btn-caza-negro btn-lg px-4 font-crux">
                 Ver Soluciones de Legado
             </a>
         </div>
@@ -157,69 +159,53 @@
 
     </div>
 </section>
-<section id="contacto-caza" class="py-5 py-lg-6 bg-caza-negro-estrategico">
-    <div class="container">
+<section id="contacto" class="py-5 bg-caza-negro-estrategico">
+    <div class="container py-md-5">
 
-        <div class="row justify-content-center text-center mb-5">
-            <div class="col-lg-8">
-                <p class="font-aero fw-bold text-caza-oro-pulsar text-uppercase mb-2">Paso Final</p>
-                <h2 class="display-3 font-zenith fw-bolder text-white mb-4">
-                    Inicie la Arquitectura de su Legado
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center mb-4">
+                <h2 class="font-zenith display-5 fw-bold text-caza-oro-pulsar">
+                    Iniciar su Arquitectura de Legado
                 </h2>
                 <p class="lead font-crux text-gris-atlas">
-                    Su visión es el plano; nosotros somos los constructores. Complete el formulario para que nuestro equipo de **CRUX** evalúe sus requerimientos y definamos los cimientos del proyecto.
+                    Rellene el formulario. Nuestro equipo se pondrá en contacto para una sesión de diagnóstico estratégico.
                 </p>
             </div>
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="p-4 p-lg-5 bg-white shadow-lg rounded-3">
-                    <form>
-                        <div class="row">
+            <div class="col-lg-6">
 
-                            <div class="col-md-6 mb-3">
-                                <label for="nombre" class="form-label font-crux fw-bold">Nombre Completo</label>
-                                <input type="text" class="form-control form-control-lg font-crux" id="nombre" placeholder="John Doe" required>
-                            </div>
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label font-crux text-white">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Su nombre y apellido" required>
+                    </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label font-crux fw-bold">Correo Electrónico Empresarial</label>
-                                <input type="email" class="form-control form-control-lg font-crux" id="email" placeholder="ejemplo@empresa.com" required>
-                            </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label font-crux text-white">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="email@ejemplo.com" required>
+                    </div>
 
-                            <div class="col-md-12 mb-3">
-                                <label for="empresa" class="form-label font-crux fw-bold">Nombre de su Empresa/Marca</label>
-                                <input type="text" class="form-control form-control-lg font-crux" id="empresa" placeholder="CRUX Digital" required>
-                            </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label font-crux text-white">Teléfono (WhatsApp)</label>
+                        <input type="tel" class="form-control" id="telefono" placeholder="+XX XXXX XXXX" required>
+                    </div>
 
-                            <div class="col-md-12 mb-3">
-                                <label for="presupuesto" class="form-label font-crux fw-bold">Rango de Presupuesto</label>
-                                <select class="form-select form-select-lg font-crux" id="presupuesto" required>
-                                    <option selected disabled>Seleccione el rango de inversión</option>
-                                    <option value="bajo">$10k - $25k USD</option>
-                                    <option value="medio">$25k - $50k USD (Recomendado)</option>
-                                    <option value="alto">$50k+ USD (Proyectos Zenith)</option>
-                                </select>
-                            </div>
+                    <div class="mb-4">
+                        <label for="mensaje" class="form-label font-crux text-white">Mensaje o Interés Principal</label>
+                        <textarea class="form-control" id="mensaje" rows="4" placeholder="Estoy interesado en la Arquitectura de Marca Personal de Alto Rendimiento." required></textarea>
+                    </div>
 
-                            <div class="col-md-12 mb-4">
-                                <label for="mensaje" class="form-label font-crux fw-bold">Detalles de su Requerimiento</label>
-                                <textarea class="form-control font-crux" id="mensaje" rows="5" placeholder="Describa brevemente el objetivo de su proyecto..."></textarea>
-                            </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-caza-oro-pulsar btn-lg font-crux">
+                            Enviar Solicitud Zenith
+                        </button>
+                    </div>
+                </form>
 
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-caza-oro-pulsar font-zenith fw-bold px-5 py-3 w-100 w-lg-auto">
-                                    Enviar Solicitud de Arquitectura
-                                </button>
-                            </div>
-
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
-
     </div>
 </section>
 {% include 'footer.html' %}

@@ -3,43 +3,42 @@
 {% include 'head.html' %}
 <body>
     <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top py-3">
-        <div class="container">
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-caza-negro-estrategico fixed-top py-3">
+    <div class="container">
 
-            <a class="navbar-brand font-zenith fw-bolder text-caza-negro-estrategico display-6" href="/">
-                CAZA
-            </a>
+        <a class="navbar-brand font-zenith fs-4 text-caza-oro-pulsar" href="#">
+            CAZA <span class="text-white">Agency</span>
+        </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav align-items-lg-center">
+        <div class="collapse navbar-collapse justify-content-end font-crux" id="navbarNav">
+            <ul class="navbar-nav">
 
-                    <li class="nav-item">
-                        <a class="nav-link font-crux text-caza-negro-estrategico me-3" href="#pilares-caza">Pilares</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 hover-oro active" aria-current="page" href="#hero-zenith">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 hover-oro" href="#servicios">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 hover-oro" href="#metodologia">Metodología</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 hover-oro" href="#nosotros">Nosotros</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link font-crux text-caza-negro-estrategico me-3" href="#servicios-premium">Servicios</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link font-crux text-caza-negro-estrategico me-3" href="#contacto-caza">Contacto</a>
-                    </li>
-
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-caza-oro-pulsar font-zenith fw-bold px-4 py-2" href="#contacto-caza">
-                            Iniciar Arquitectura
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-caza-oro-pulsar btn-sm px-3 mt-2 mt-lg-0" href="#contacto">
+                        Contacto
+                    </a>
+                </li>
+            </ul>
         </div>
-    </nav>
-</header>
+    </div>
+</nav></header>
 <style>
     body {
         padding-top: 7rem; /* Ajuste basado en la altura de la Navbar */
