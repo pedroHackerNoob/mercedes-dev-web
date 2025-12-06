@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import desc
+# from sqlalchemy import desc  <-- Ya no necesitamos esto aquí
 
 from persistence.db import engine, Base, SessionLocal
 from entities.models import User, Category, Thread, Comment
@@ -22,7 +22,7 @@ login_manager.login_view = 'web_login'  # Nombre de la función de la vista de l
 def load_user(user_id):
     db = SessionLocal()
     try:
-        return db.query(User).get(int(user_id))
+        return User.get_by_id(db, user_id)
     finally:
         db.close()
 
@@ -45,7 +45,7 @@ def web_feed():
     """Muro principal de noticias."""
     db = SessionLocal()
     try:
-        threads = db.query(Thread).order_by(desc(Thread.created_at)).all()
+        threads = Thread.get_all_ordered(db)
         return render_template('feed.html', threads=threads)
     finally:
         db.close()
@@ -70,7 +70,7 @@ def web_login():
 
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.username == username).first()
+        user = User.get_by_username(db, username)
         if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('web_feed'))
@@ -95,18 +95,14 @@ def web_signup():
 
     db = SessionLocal()
     try:
-        existing_user = db.query(User).filter(
-            (User.username == username) | (User.email == email)
-        ).first()
+        existing_user = User.get_by_username_or_email(db, username, email)
 
         if existing_user:
             flash("Error: El nombre de usuario o correo ya están en uso.")
             return redirect(url_for('web_signup'))
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, email=email, password=hashed_pw)
-        db.add(new_user)
-        db.commit()
+        User.create(db, username, email, hashed_pw)
 
         flash("¡Cuenta creada! Por favor inicia sesión.")
         return redirect(url_for('web_login'))
@@ -132,19 +128,18 @@ def web_logout():
 def create_thread_web():
     db = SessionLocal()
     if request.method == 'GET':
-        categories = db.query(Category).all()
+        categories = Category.get_all(db)
         db.close()
         return render_template('createThread.html', categories=categories)
 
     try:
-        new_thread = Thread(
+        Thread.create(
+            db,
             title=request.form.get('title'),
             content=request.form.get('content'),
             user_id=current_user.id,
             category_id=request.form.get('category_id')
         )
-        db.add(new_thread)
-        db.commit()
         flash("¡Hilo publicado con éxito!")
         return redirect(url_for('web_feed'))
     except Exception as e:
@@ -160,7 +155,7 @@ def create_thread_web():
 def edit_thread(thread_id):
     db = SessionLocal()
     try:
-        thread = db.query(Thread).filter(Thread.id == thread_id).first()
+        thread = Thread.get_by_id(db, thread_id)
 
         if not thread:
             flash("El hilo no existe.")
@@ -171,7 +166,7 @@ def edit_thread(thread_id):
             return redirect(url_for('web_feed'))
 
         if request.method == 'GET':
-            categories = db.query(Category).all()
+            categories = Category.get_all(db)
             return render_template('editThread.html', thread=thread, categories=categories)
 
         # POST
@@ -201,13 +196,7 @@ def create_comment_web():
 
     db = SessionLocal()
     try:
-        new_comment = Comment(
-            content=content,
-            user_id=current_user.id,
-            thread_id=thread_id
-        )
-        db.add(new_comment)
-        db.commit()
+        Comment.create(db, content=content, user_id=current_user.id, thread_id=thread_id)
         flash("Comentario agregado!")
     except Exception as e:
         flash(f"Error al comentar: {str(e)}")
@@ -221,7 +210,7 @@ def create_comment_web():
 def edit_comment(comment_id):
     db = SessionLocal()
     try:
-        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+        comment = Comment.get_by_id(db, comment_id)
         if not comment:
             flash("El comentario no existe.")
             return redirect(url_for('web_feed'))
@@ -266,7 +255,7 @@ def api_login():
 
     db = SessionLocal()
     try:
-        user = db.query(User).filter(User.username == username).first()
+        user = User.get_by_username(db, username)
         if user and check_password_hash(user.password, password):
             login_user(user)
             return jsonify({
@@ -295,20 +284,17 @@ def api_signup():
 
     db = SessionLocal()
     try:
-        existing_user = db.query(User).filter(
-            (User.username == data['username']) | (User.email == data['email'])
-        ).first()
+        existing_user = User.get_by_username_or_email(db, data['username'], data['email'])
 
         if existing_user:
             return jsonify({"error": "El usuario o email ya existen"}), 400
 
-        new_user = User(
+        User.create(
+            db,
             username=data['username'],
             email=data['email'],
             password=generate_password_hash(data['password'])
         )
-        db.add(new_user)
-        db.commit()
         return jsonify({"message": "Usuario registrado con éxito"}), 201
     except Exception as e:
         db.rollback()
@@ -320,7 +306,7 @@ def api_signup():
 @app.route('/api/users', methods=['GET'])
 def get_users():
     db = SessionLocal()
-    users = db.query(User).all()
+    users = User.get_all(db)
     db.close()
     return jsonify([{"id": u.id, "username": u.username} for u in users])
 
@@ -330,7 +316,7 @@ def update_user(user_id):
     data = request.get_json()
     db = SessionLocal()
     try:
-        user = db.query(User).get(user_id)
+        user = User.get_by_id(db, user_id)
         if not user:
             return jsonify({"error": "Usuario no encontrado"}), 404
 
@@ -346,11 +332,10 @@ def update_user(user_id):
 def delete_user(user_id):
     db = SessionLocal()
     try:
-        user = db.query(User).get(user_id)
+        user = User.get_by_id(db, user_id)
         if not user:
             return jsonify({"error": "Usuario no encontrado"}), 404
-        db.delete(user)
-        db.commit()
+        User.delete(db, user)
         return jsonify({"message": "Usuario eliminado"}), 200
     except Exception:
         return jsonify({"error": "No se puede borrar el usuario (tiene actividad)"}), 400
@@ -361,7 +346,7 @@ def delete_user(user_id):
 @app.route('/api/categories', methods=['GET'])
 def get_categories():
     db = SessionLocal()
-    cats = db.query(Category).all()
+    cats = Category.get_all(db)
     db.close()
     return jsonify([{"id": c.id, "name": c.name} for c in cats])
 
@@ -374,10 +359,7 @@ def create_category():
 
     db = SessionLocal()
     try:
-        new_cat = Category(name=data['name'])
-        db.add(new_cat)
-        db.commit()
-        db.refresh(new_cat)
+        new_cat = Category.create(db, data['name'])
         return jsonify({"id": new_cat.id, "name": new_cat.name, "message": "Creada"}), 201
     finally:
         db.close()
@@ -391,14 +373,13 @@ def create_thread():
 
     db = SessionLocal()
     try:
-        new_thread = Thread(
+        Thread.create(
+            db,
             title=data['title'],
             content=data['content'],
             user_id=data['user_id'],
             category_id=data['category_id']
         )
-        db.add(new_thread)
-        db.commit()
         return jsonify({"message": "Hilo publicado"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -409,7 +390,7 @@ def create_thread():
 @app.route('/api/feed', methods=['GET'])
 def get_feed():
     db = SessionLocal()
-    threads = db.query(Thread).all()
+    threads = Thread.get_all(db)
     results = []
     for t in threads:
         results.append({
@@ -428,7 +409,7 @@ def get_feed():
 def get_single_thread(thread_id):
     db = SessionLocal()
     try:
-        thread = db.query(Thread).get(thread_id)
+        thread = Thread.get_by_id(db, thread_id)
         if not thread:
             return jsonify({"error": "Hilo no encontrado"}), 404
         return jsonify({
@@ -446,11 +427,10 @@ def get_single_thread(thread_id):
 def delete_thread(thread_id):
     db = SessionLocal()
     try:
-        thread = db.query(Thread).get(thread_id)
+        thread = Thread.get_by_id(db, thread_id)
         if not thread:
             return jsonify({"error": "No encontrado"}), 404
-        db.delete(thread)
-        db.commit()
+        Thread.delete(db, thread)
         return jsonify({"message": "Eliminado"}), 200
     except Exception as e:
         db.rollback()
@@ -467,13 +447,7 @@ def create_comment():
 
     db = SessionLocal()
     try:
-        new_comment = Comment(
-            content=data['content'],
-            user_id=data['user_id'],
-            thread_id=data['thread_id']
-        )
-        db.add(new_comment)
-        db.commit()
+        Comment.create(db, content=data['content'], user_id=data['user_id'], thread_id=data['thread_id'])
         return jsonify({"message": "Comentario agregado"}), 201
     finally:
         db.close()
@@ -483,11 +457,10 @@ def create_comment():
 def delete_comment(comment_id):
     db = SessionLocal()
     try:
-        comment = db.query(Comment).get(comment_id)
+        comment = Comment.get_by_id(db, comment_id)
         if not comment:
             return jsonify({"error": "No encontrado"}), 404
-        db.delete(comment)
-        db.commit()
+        Comment.delete(db, comment)
         return jsonify({"message": "Eliminado"}), 200
     finally:
         db.close()
